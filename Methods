@@ -1,0 +1,302 @@
+import java.util.Scanner;
+
+class node 
+{
+    int id;
+    private String name;
+    private double salary;
+    private node next;
+ 
+    public node (int d, String n, double s, node nex) 
+    // the node of the elements contains the id, name, salary and the address of the next element
+    {
+        id = d; 
+        name = n;
+        salary = s;
+        next = nex;
+    }    
+    public int getId () // returns the id number
+    {
+        return id;
+    }
+    public String getName () // returns the name
+    {
+        return name;
+    }
+    public double getSalary () // returns the salary
+    {
+        return salary;
+    }
+    public node getNext () // returns the address of the next element
+    {
+        return next;
+    }
+        
+    public void setId (int d) // sets the id 
+    {
+        id = d;
+    }
+    public void setName (String n) // sets the name
+    {
+        name = n;
+    }
+    public void setSalary (double s) // sets the salary
+    {
+        salary = s;
+    }
+    public void setNext (node nex) // sets the address to the next element 
+    {
+        next = nex;
+    }
+        
+    public void printData () 
+    {
+        System.out.println("id = " + id);
+        System.out.println("name = " + name);
+        System.out.println("salary = " + salary);
+    }
+}
+
+class singlyLinkedList 
+{
+    private node First;
+    private node Last;
+    /*
+    public singlyLinkedList ()
+    {
+        First = null;
+        Last = null;
+    }
+    */
+    
+    public node search (int d) // the searching function
+    {
+        node temp = First; // let temp equal the first element of the list 
+        while (temp != null) 
+        {
+            if (temp.getId() == d) // comparing the id in the element with the one we're searching for
+            {
+                return temp; // and then return and that will end the loop
+            }
+            temp = temp.getNext(); // if we didn't find, let temp equal the next element
+        }
+        return temp;
+    }
+    
+    public void insertFirst (int d, String n, double s) 
+	// this function inserts a new element at the top of the list 
+    {
+        if (search(d) != null)
+        {
+            System.out.println("Record is duplicated");
+            return;
+        }
+        node temp = new node (d, n, s, null);
+        if (First == null) // in case the list is empty
+            First = Last = temp;
+        else 
+        {
+            temp.setNext(First); // let temp refer at the address that the first element refers to 
+            First = temp; // now let the first elemnt equal temp 
+        }
+    }
+    
+    public void insertLast (int d, String n, double s) 
+	// this function inserts a new element at the bottom of the list 
+    {
+        if (search(d) != null)
+        {
+            System.out.println("Record is duplicated");
+            return;
+        }
+        node temp = new node (d, n, s, null);
+        if (First == null)
+            First = Last = temp;
+        else 
+        {
+            Last.setNext(temp);
+            Last = temp;
+        }
+    }
+    
+    public void removeFirst () // removes first element
+    {
+        if (First == null)
+        {
+            System.out.println("list is empty!");
+            return;
+        }
+        if (First == Last) // if the list contains only one element
+        {
+            First = Last = null;
+            
+        }
+     
+        First = First.getNext();
+        
+    }
+
+    public void removeLast () // removes last element
+    {
+        if (First == null)
+        {
+            System.out.println("list is empty!");
+            return;
+        }
+        if (First == Last) // if the list contains only one element
+        {
+            First = Last = null;
+        }
+        node temp = First;
+        while (temp.getNext() != Last) // to place temp at the element prior to last
+            temp = temp.getNext();
+        temp.setNext(null);
+        Last = temp;
+   
+    }
+    
+
+    public void printList() // the printing function
+    {
+        node temp = First; // let temp equal the first element of the list
+        while (temp != null)
+        {
+            temp.printData(); // calls the function printData to print the element
+            temp = temp.getNext(); // let temp equal the next element
+        }
+    }
+
+    public void removeId(int d) // removes the element the id number 
+    {
+        if(First.getId() == d)
+        {
+            First = First.getNext(); // First will equal the next element 
+            if (First == null)
+                Last = null;
+            return;
+        }
+        
+        node pre = null;
+        node temp = First;
+        while (temp != null && temp.getId() != d)
+        {
+            pre = temp;
+            temp = temp.getNext();
+        }
+        if (temp == null)
+        {
+            System.out.println("Not found");
+            return;
+        }
+        pre.setNext(temp.getNext()); // sets pre to the element after temp 
+        if (temp == Last)
+            Last = pre;
+    }
+    
+    public void insertSorted (int d, String n, double s) 
+	// inserts an element according to the id number
+    {
+        if (search(d) != null)
+        {
+            System.out.println("Record is duplicated");
+            return;
+        }
+        node temp = new node (d, n, s, null);
+        if (First == null) 
+        {
+            First = Last = temp;
+            return;
+        }
+        if (d < First.getId()) // in case the elements id is lower than the first element id
+        {
+            temp.setNext(First);
+            First = temp; 
+            return;
+        }
+        if (d > Last.getId()) // in case the elements id is higher than the last elements id
+        {
+            Last.setNext(temp);
+            Last = temp;
+            return;
+        }
+        node current = First; // current will be after temp
+        node prev = null; // prev will be before temp
+        while (current.getId () < d)
+        {
+            prev = current;
+            current = current.getNext();
+            
+            
+        }
+        temp.setNext(current); // set temp’s address to the next element 
+            prev.setNext(temp); // set prev’s address to temp’s address
+        
+    }
+    
+    public void Reverse() // reverses the elements
+    {
+        if (First == null || First == Last) // if there is no elements, or one element
+            return;
+            
+        node prev = null;
+        node curr = First;
+        node nxt = First.getNext();
+        
+        while (curr != null) // reverses the elements “next” which contain addresses
+        {
+            curr.setNext(prev); 
+            prev = curr;
+            curr = nxt;
+            if (nxt != null)
+                nxt = nxt.getNext();
+        }
+        
+        curr = First; // switches the first with the last element
+        First = Last;
+        Last = curr;
+    }
+    
+    public void modify (int d) // modifies an element
+    {
+        Scanner sc = new Scanner(System.in);
+        node temp = search(d);
+        if (temp == null)
+            return;
+        System.out.print("Enter new name & salary: " );
+        temp.setName(sc.next());
+        temp.setSalary(sc.nextDouble());
+    }
+
+    public void Statistics () 
+    {
+        int sum = 0, n = 0;
+        double avg, std, sumdiff = 0;
+        node temp = First;
+        while (temp != null)
+        {
+            sum += temp.getSalary();
+            n++;
+            
+            temp = temp.getNext();
+        }
+        if (n == 0)
+            System.out.print("No elemnts");
+        else 
+        {
+            avg = sum / n;
+            System.out.println("the sum of the salary is: " + sum);
+            System.out.println("the average of the salaries are: " + avg);
+        }
+        avg = sum / n;
+        temp = First;
+        while (temp != null)
+        {
+            sumdiff = Math.pow( (temp.getSalary() - avg), 2);
+            temp = temp.getNext();
+        }
+        
+        std = Math.sqrt (sumdiff / (n-1));
+        System.out.println("the standard deviation: " + std);
+    }
+}
+
